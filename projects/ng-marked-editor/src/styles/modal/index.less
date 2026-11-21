@@ -1,0 +1,26 @@
+// 模态框遮罩层（CDK Overlay backdrop）
+// CDK prebuilt 已提供 position / inset / z-index / opacity 过渡，这里只覆盖视觉
+
+.default-modal {
+    background-color: rgba(31, 35, 40, .5);
+    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(2px);
+}
+
+// 深色页面（body 或根容器带 dark 时）加深遮罩
+body.dark .default-modal,
+.dark-page .default-modal {
+    background-color: rgba(1, 4, 9, .8);
+}
+
+.modal-wrap {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    overflow: auto;
+    outline: 0;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1000;
+}

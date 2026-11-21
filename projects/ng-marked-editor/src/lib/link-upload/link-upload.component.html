@@ -1,0 +1,20 @@
+<div class="modal-container" [class.dark]="isDark" [class.default]="!isDark" [ngStyle]="defaultStyle">
+    <div class="modal-header">
+        <h3 class="modal-title">添加链接</h3>
+        <button type="button" class="modal-close" aria-label="关闭" (click)="cancel()">×</button>
+    </div>
+    <div class="modal-body">
+        <label class="field">
+            <span class="field-label">链接地址</span>
+            <input [(ngModel)]="url" type="text" placeholder="https://example.com">
+        </label>
+        <label class="field">
+            <span class="field-label">链接描述</span>
+            <input [(ngModel)]="desc" type="text" placeholder="可选的链接文本">
+        </label>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" (click)="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" *ngIf="url" (click)="confirm()">确认</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,217 @@
+<div class="modal-container" [class.dark]="isDark" [class.default]="!isDark" [ngStyle]="defaultStyle">
+    <div class="modal-header">
+        <h3 class="modal-title">流程图编辑器</h3>
+        <button type="button" class="modal-close" aria-label="关闭" (click)="cancel()">×</button>
+    </div>
+
+    <div class="builder-toolbar">
+        <label class="toolbar-item">
+            <span class="toolbar-label">类型</span>
+            <select class="builder-select" [(ngModel)]="diagramType" (ngModelChange)="onTypeChange($event)" aria-label="图类型">
+                <option *ngFor="let item of diagramTypes" [ngValue]="item.value">{{ item.label }}</option>
+            </select>
+        </label>
+        <div class="mode-switch" role="group" aria-label="编辑模式">
+            <button type="button" class="mode-btn" [class.active]="mode === 'form'" (click)="setMode('form')">表单</button>
+            <button type="button" class="mode-btn" [class.active]="mode === 'source'" (click)="setMode('source')">源码</button>
+        </div>
+    </div>
+
+    <div class="builder-body">
+        <div class="builder-edit">
+            <textarea
+                *ngIf="mode === 'source'"
+                class="source-input"
+                [(ngModel)]="source"
+                (ngModelChange)="onSourceChange()"
+                spellcheck="false"
+                aria-label="Mermaid 源码"
+            ></textarea>
+
+            <ng-container *ngIf="mode === 'form'">
+                <div class="form-notice" *ngIf="!supportsForm">该图类型请使用源码模式编辑</div>
+
+                <div class="form-pane" *ngIf="supportsForm && diagramType === 'flowchart'">
+                    <div class="form-section">
+                        <div class="section-head">
+                            <span class="section-title">节点</span>
+                            <button type="button" class="btn btn-mini" (click)="addNode()">新增节点</button>
+                        </div>
+                        <div class="form-table-wrap">
+                            <table class="builder-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-id">ID</th>
+                                        <th>文本</th>
+                                        <th class="col-shape">形状</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let node of nodes; let i = index">
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="node.id" (ngModelChange)="onFormChange()" aria-label="节点 ID">
+                                        </td>
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="node.text" (ngModelChange)="onFormChange()" aria-label="节点文本">
+                                        </td>
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="node.shape" (ngModelChange)="onFormChange()" aria-label="节点形状">
+                                                <option value="rect">矩形</option>
+                                                <option value="round">圆角</option>
+                                                <option value="diamond">菱形</option>
+                                                <option value="circle">圆形</option>
+                                            </select>
+                                        </td>
+                                        <td class="col-action">
+                                            <button type="button" class="row-remove" aria-label="删除节点" (click)="removeNode(i)">×</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-head">
+                            <span class="section-title">连线</span>
+                            <button type="button" class="btn btn-mini" (click)="addLink()">新增连线</button>
+                        </div>
+                        <div class="form-table-wrap">
+                            <table class="builder-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-node">起点</th>
+                                        <th class="col-node">终点</th>
+                                        <th>标签</th>
+                                        <th class="col-line">线型</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let link of links; let i = index">
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="link.from" (ngModelChange)="onFormChange()" aria-label="连线起点">
+                                                <option *ngFor="let node of nodes" [ngValue]="node.id">{{ node.id || '未命名' }}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="link.to" (ngModelChange)="onFormChange()" aria-label="连线终点">
+                                                <option *ngFor="let node of nodes" [ngValue]="node.id">{{ node.id || '未命名' }}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="link.label" (ngModelChange)="onFormChange()" aria-label="连线标签">
+                                        </td>
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="link.line" (ngModelChange)="onFormChange()" aria-label="连线类型">
+                                                <option value="arrow">实线箭头</option>
+                                                <option value="dashed">虚线箭头</option>
+                                                <option value="thick">粗线箭头</option>
+                                                <option value="open">无箭头实线</option>
+                                            </select>
+                                        </td>
+                                        <td class="col-action">
+                                            <button type="button" class="row-remove" aria-label="删除连线" (click)="removeLink(i)">×</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-pane" *ngIf="supportsForm && diagramType === 'sequence'">
+                    <div class="form-section">
+                        <div class="section-head">
+                            <span class="section-title">参与者</span>
+                            <button type="button" class="btn btn-mini" (click)="addParticipant()">新增参与者</button>
+                        </div>
+                        <div class="form-table-wrap">
+                            <table class="builder-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-id">标识</th>
+                                        <th>名称</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of participants; let i = index">
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="item.key" (ngModelChange)="onFormChange()" aria-label="参与者标识">
+                                        </td>
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="item.label" (ngModelChange)="onFormChange()" aria-label="参与者名称">
+                                        </td>
+                                        <td class="col-action">
+                                            <button type="button" class="row-remove" aria-label="删除参与者" (click)="removeParticipant(i)">×</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-head">
+                            <span class="section-title">消息</span>
+                            <button type="button" class="btn btn-mini" (click)="addMessage()">新增消息</button>
+                        </div>
+                        <div class="form-table-wrap">
+                            <table class="builder-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-node">发送方</th>
+                                        <th class="col-node">接收方</th>
+                                        <th>内容</th>
+                                        <th class="col-line">线型</th>
+                                        <th class="col-action"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let message of messages; let i = index">
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="message.from" (ngModelChange)="onFormChange()" aria-label="发送方">
+                                                <option *ngFor="let item of participants" [ngValue]="item.key">{{ item.key || '未命名' }}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="message.to" (ngModelChange)="onFormChange()" aria-label="接收方">
+                                                <option *ngFor="let item of participants" [ngValue]="item.key">{{ item.key || '未命名' }}</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <input class="builder-input" type="text" [(ngModel)]="message.text" (ngModelChange)="onFormChange()" aria-label="消息内容">
+                                        </td>
+                                        <td>
+                                            <select class="builder-select" [(ngModel)]="message.line" (ngModelChange)="onFormChange()" aria-label="消息线型">
+                                                <option value="solid">实线</option>
+                                                <option value="dashed">虚线</option>
+                                                <option value="cross">叉号</option>
+                                                <option value="async">异步</option>
+                                            </select>
+                                        </td>
+                                        <td class="col-action">
+                                            <button type="button" class="row-remove" aria-label="删除消息" (click)="removeMessage(i)">×</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+        </div>
+
+        <div class="builder-preview">
+            <div class="diagram-preview ng-editor-md-workspace-display" [ngClass]="theme" #previewEl [innerHTML]="previewHtml"></div>
+            <div class="preview-error" *ngIf="renderError">{{ renderError }}</div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" (click)="cancel()">取消</button>
+        <button type="button" class="btn btn-primary" [disabled]="!canInsert" (click)="insert()">插入</button>
+    </div>
+</div>

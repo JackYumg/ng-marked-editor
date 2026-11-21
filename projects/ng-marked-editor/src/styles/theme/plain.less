@@ -1,0 +1,18 @@
+@import './tools.less';
+
+// 纯白文档风（无斑马纹、无标题底边框）
+.ng-editor-md-workspace-display.plain,
+.md-editor.plain {
+    .md-theme(light; #1a1a1a; #6a737d; #ffffff; #eaecef; #f6f8fa; rgba(0, 0, 0, 0.05); #0969da; #eaecef; #ffffff; #ffffff);
+    .md-hljs(#6a737d; #d73a49; #032f62; #005cc5; #6f42c1; #e36209; #005cc5);
+
+    h1,
+    h2 {
+        padding-bottom: 0;
+        border-bottom: 0;
+    }
+
+    tbody tr:nth-child(2n) {
+        background: transparent;
+    }
+}

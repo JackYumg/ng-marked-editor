@@ -1,0 +1,107 @@
+@import '../../styles/modal/tokens.less';
+
+:host {
+    font-size: inherit;
+    height: 2.8em;
+    line-height: 2.8em;
+    width: 100%;
+    display: flex;
+    justify-items: center;
+    position: relative;
+
+    .icon-ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        height: 100%;
+        display: inline-flex;
+
+        &.right {
+            flex: 2;
+        }
+
+        &-li {
+            padding: 0;
+            margin: 0;
+            display: inline-flex;
+            height: 100%;
+            line-height: 2.8em;
+            margin: 0 -0.4em;
+
+            &-icon {
+                padding: 0.4em;
+                margin: .2em 0;
+                display: flex;
+                cursor: pointer;
+                border-radius: 0.3em;
+                transition: background-color .15s;
+
+                svg {
+                    border-radius: 0.19em;
+                    padding: 0 .3em;
+                }
+
+                &:hover {
+                    background: var(--md-border, #d1d9e0);
+                }
+
+                &.disabled {
+                    pointer-events: none;
+                    fill: var(--md-text-muted, #c6c6c6);
+                    opacity: .4;
+                }
+            }
+        }
+    }
+
+    .divider {
+        border-left: 1px solid var(--md-border, #d1d9e0);
+        margin: 0.8em 0.1em;
+    }
+}
+
+.example-list {
+    min-width: 160px;
+    margin: 0;
+    padding: 4px;
+    list-style: none;
+    text-align: left;
+    background: var(--mo-bg);
+    border: 1px solid var(--mo-border);
+    border-radius: 12px;
+    box-shadow: var(--mo-shadow);
+
+    &.default {
+        .modal-light-tokens();
+    }
+
+    &.dark {
+        .modal-dark-tokens();
+    }
+
+    > li {
+        list-style: none;
+        padding: 8px 12px;
+        color: var(--mo-text);
+        border-radius: 6px;
+        cursor: pointer;
+        transition: background-color .15s, color .15s;
+
+        &:hover {
+            background: var(--mo-hover);
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.4;
+            color: inherit;
+        }
+    }
+}

@@ -1,0 +1,171 @@
+<ul class="icon-ul" [class.dark]="isDark" [class.default]="!isDark">
+    <ng-container *ngFor="let i of baseGroup1">
+        <li class="icon-ul-li" [title]="i.title">
+            <span class="icon-ul-li-icon" [class.disabled]="readonly">
+                <svg viewBox="0 0 1024 1024" (click)="itemClick(i , $event )">
+                    <use [attr.xlink:href]="i.name"></use>
+                </svg>
+            </span>
+        </li>
+    </ng-container>
+
+    <li class="icon-ul-li">
+        <span class="icon-ul-li-icon" [class.disabled]="readonly" cdkOverlayOrigin #overlay="cdkOverlayOrigin">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(baseTitlt , $event )">
+                <use [attr.xlink:href]="baseTitlt.name"></use>
+            </svg>
+            <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="overlay"
+                [cdkConnectedOverlayOpen]="baseTitlt.show">
+                <div name="tool" class="overlay-full">
+                    <ul name="tool" class="example-list" [class.dark]="isDark" [class.default]="!isDark">
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 1)">
+                            <h1>一级标题</h1>
+                        </li>
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 2)">
+                            <h2>二级标题</h2>
+                        </li>
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 3)">
+                            <h3>三级标题</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 4)">
+                            <h4>四级标题</h4>
+                        </li>
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 5)">
+                            <h5>五级标题</h5>
+                        </li>
+                        <li name="tool" (click)="itemClick(baseTitlt , $event , 6)">
+                            <h6>六级标题</h6>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
+        </span>
+    </li>
+</ul>
+
+<span class="divider"  [class.dark]="isDark" [class.default]="!isDark"></span>
+
+<ul class="icon-ul">
+    <li class="icon-ul-li" *ngFor="let i of baseGroup2">
+        <span class="icon-ul-li-icon" [title]="i.title" [class.disabled]="readonly">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(i)">
+                <use [attr.xlink:href]="i.name"></use>
+            </svg>
+        </span>
+    </li>
+</ul>
+
+<span class="divider" [class.dark]="isDark" [class.default]="!isDark"></span>
+<ul class="icon-ul">
+    <li class="icon-ul-li" *ngFor="let i of baseGroup3">
+        <span class="icon-ul-li-icon" [title]="i.title" [class.disabled]="readonly">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(i)">
+                <use [attr.xlink:href]="i.name"></use>
+            </svg>
+        </span>
+    </li>
+</ul>
+
+<!-- 更多功能 -->
+<span class="divider" [class.dark]="isDark" [class.default]="!isDark"></span>
+<ul class="icon-ul">
+    <li class="icon-ul-li" >
+        <span class="icon-ul-li-icon" [title]="moreFunction[0].title" [class.disabled]="readonly" cdkOverlayOrigin #liuchengtu="cdkOverlayOrigin">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(moreFunction[0] , $event)">
+                @if (missingIcons['icon-liuchengtu']) {
+                    <g fill="none" style="stroke: var(--md-text-muted, #59636e)" stroke-width="44" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="368" y="112" width="288" height="152" rx="20" />
+                        <rect x="96" y="664" width="288" height="152" rx="20" />
+                        <rect x="640" y="664" width="288" height="152" rx="20" />
+                        <path d="M512 264v168M512 432H240v232M512 432h272v232" />
+                    </g>
+                } @else {
+                    <use xlink:href="#icon-liuchengtu"></use>
+                }
+            </svg>
+            <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="liuchengtu"
+                [cdkConnectedOverlayOpen]="moreFunction[0].show">
+                <div name="tool" class="overlay-full">
+                    <ul name="tool" class="example-list" [class.dark]="isDark" [class.default]="!isDark">
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'visual')">
+                            <h3>可视化编辑</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'lct')">
+                            <h3>流程图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'sxt')">
+                            <h3>时序图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'ztt')">
+                            <h3>状态图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'lt')">
+                            <h3>类图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'bt')">
+                            <h3>饼图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'gtt')">
+                            <h3>甘特图</h3>
+                        </li>
+                        <li name="tool" (click)="itemClick(moreFunction[0] , $event , 'ert')">
+                            <h3>ER图</h3>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
+        </span>
+    </li>
+    <li class="icon-ul-li">
+        <span class="icon-ul-li-icon" [title]="moreFunction[1].title" [class.disabled]="readonly" cdkOverlayOrigin #gongshi="cdkOverlayOrigin">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(moreFunction[1] , $event)">
+                @if (missingIcons['icon-gongshi']) {
+                    <text x="512" y="736" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif"
+                        font-size="600" font-style="italic" style="fill: var(--md-text-muted, #59636e)">fx</text>
+                } @else {
+                    <use xlink:href="#icon-gongshi"></use>
+                }
+            </svg>
+            <ng-template cdkConnectedOverlay [cdkConnectedOverlayOrigin]="gongshi"
+                [cdkConnectedOverlayOpen]="moreFunction[1].show">
+                <div name="tool" class="overlay-full">
+                    <ul name="tool" class="example-list" [class.dark]="isDark" [class.default]="!isDark">
+                        <li name="tool"  (click)="itemClick(moreFunction[1] , $event , 'visual')">
+                            <h3>可视化编辑</h3>
+                        </li>
+                        <li name="tool"  (click)="itemClick(moreFunction[1] , $event , 'inner')">
+                            <h3>行内公式</h3>
+                        </li>
+                        <li name="tool"  (click)="itemClick(moreFunction[1] , $event , 'padding')">
+                            <h3>行间公式</h3>
+                        </li>
+                    </ul>
+                </div>
+            </ng-template>
+        </span>
+    </li>
+</ul>
+
+<ng-container>
+    <span class="divider" [class.dark]="isDark" [class.default]="!isDark"></span>
+    <ul class="icon-ul right">
+        <li class="icon-ul-li" *ngFor="let i of optGroup">
+            <span class="icon-ul-li-icon" [class.dark]="isDark" [class.default]="!isDark" [class.disabled]="i.disabled || readonly">
+                <svg viewBox="0 0 1024 1024" (click)="itemClick(i)">
+                    <use [attr.xlink:href]="i.name"></use>
+                </svg>
+            </span>
+        </li>
+    </ul>
+</ng-container>
+
+<!-- 右边部分按钮 -->
+<ul class="icon-ul">
+    <li class="icon-ul-li" *ngFor="let i of rightGroup">
+        <span class="icon-ul-li-icon" [title]="i.title" [class.disabled]="readonly && i.type === 'editor-transform'">
+            <svg viewBox="0 0 1024 1024" (click)="itemClick(i)">
+                <use [attr.xlink:href]="i.name"></use>
+            </svg>
+        </span>
+    </li>
+</ul>

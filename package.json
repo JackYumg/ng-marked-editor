@@ -1,0 +1,51 @@
+{
+  "name": "ng-marked-editor",
+  "version": "0.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve demo",
+    "start:ssr": "ng serve demo",
+    "build:lib": "ng build ng-marked-editor",
+    "build:demo": "ng build demo",
+    "build": "ng build ng-marked-editor && ng build demo",
+    "watch:lib": "ng build ng-marked-editor --watch --configuration development",
+    "serve:ssr": "node dist/demo/server/server.mjs",
+    "test": "ng test"
+  },
+  "private": true,
+  "packageManager": "pnpm@10.32.1",
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  },
+  "dependencies": {
+    "@angular/animations": "^22.3.0",
+    "@angular/cdk": "^22.3.0",
+    "@angular/common": "^22.3.0",
+    "@angular/compiler": "^22.3.0",
+    "@angular/core": "^22.3.0",
+    "@angular/forms": "^22.3.0",
+    "@angular/platform-browser": "^22.3.0",
+    "@angular/platform-server": "^22.3.0",
+    "@angular/router": "^22.3.0",
+    "@angular/ssr": "^22.3.0",
+    "express": "^5.1.0",
+    "highlight.js": "^11.12.0",
+    "katex": "^0.19.1",
+    "marked": "^18.2.1",
+    "mermaid": "^12.3.0",
+    "prettier": "^3.8.1",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.3.0",
+    "@angular/cli": "^22.3.0",
+    "@angular/compiler-cli": "^22.3.0",
+    "@types/express": "^5.0.1",
+    "@types/node": "^22.12.0",
+    "jsdom": "^31.0.0",
+    "less": "^4.2.0",
+    "typescript": "~6.0.2",
+    "vitest": "^5.0.0"
+  }
+}

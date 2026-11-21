@@ -1,0 +1,64 @@
+<div class="demo" [class.dark]="isDark">
+    <header class="demo-header">
+        <div class="brand">
+            <span class="logo">M</span>
+            <div class="brand-text">
+                <h1>{{ title }}</h1>
+                <p>Angular 22 · Standalone · SSR Ready</p>
+            </div>
+        </div>
+        <div class="actions">
+            <label class="theme-select">
+                <span>主题</span>
+                <select [(ngModel)]="theme" aria-label="选择主题">
+                    @for (group of themeGroups; track group.label) {
+                    <optgroup [label]="group.label">
+                        @for (item of group.themes; track item.value) {
+                        <option [value]="item.value">{{ item.label }}</option>
+                        }
+                    </optgroup>
+                    }
+                </select>
+            </label>
+            <button type="button" class="btn" (click)="reset()">重置内容</button>
+        </div>
+    </header>
+
+    <main class="demo-main">
+        <aside class="demo-panel">
+            <h2>配置</h2>
+            <label class="field">
+                <input type="checkbox" [(ngModel)]="option.saveOption.autoSave">
+                <span>自动保存到 localStorage</span>
+            </label>
+            <label class="field">
+                <input type="checkbox" [(ngModel)]="option.customUpload">
+                <span>自定义文件上传</span>
+            </label>
+            <label class="field">
+                <input type="checkbox" [(ngModel)]="readonly">
+                <span>只读模式</span>
+            </label>
+            <p class="hint">
+                打开「自定义文件上传」后，插入图片会调用演示中的 <code>fileUploadChange</code>。
+            </p>
+
+            <h2>统计</h2>
+            <div class="stat">
+                <span>字符数</span>
+                <strong>{{ charCount }}</strong>
+            </div>
+            @if (lastSaved) {
+            <div class="stat">
+                <span>最近保存</span>
+                <strong>{{ lastSaved }}</strong>
+            </div>
+            }
+        </aside>
+
+        <section class="demo-editor">
+            <lib-ng-marked-editor [(ngModel)]="markdown" [theme]="theme" [readonly]="readonly" [option]="option"
+                [fileUploadChange]="fileUploadChange" (saveChange)="onSave($event)"></lib-ng-marked-editor>
+        </section>
+    </main>
+</div>

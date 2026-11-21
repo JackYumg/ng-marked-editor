@@ -1,0 +1,14 @@
+@import '../../styles/modal/tokens.less';
+
+:host {
+    display: block;
+}
+
+.modal-container {
+    .modal-light-tokens();
+    .modal-form-base();
+
+    &.dark {
+        .modal-dark-tokens();
+    }
+}

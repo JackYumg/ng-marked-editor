@@ -1,0 +1,48 @@
+<div class="modal-container" [class.dark]="isDark" [class.default]="!isDark" [ngStyle]="defaultStyle">
+    <div class="modal-header">
+        <h3 class="modal-title">添加图片</h3>
+        <button type="button" class="modal-close" aria-label="关闭" (click)="cancel()">×</button>
+    </div>
+    <div class="modal-tabset">
+        <div class="modal-tabset-tab" (click)="activeTab('upload')" [class.active]="optType === 'upload'">
+            <h3>上传图片</h3>
+        </div>
+        <div class="modal-tabset-tab" (click)="activeTab('online')" [class.active]="optType === 'online'">
+            <h3>在线图片</h3>
+        </div>
+    </div>
+    <div class="modal-body" *ngIf="optType === 'upload'">
+        <label class="upload-dropzone">
+            <input class="upload-input" type="file" (change)="fileuploadChange($event)">
+            <span class="upload-text">点击上传图片</span>
+            <span class="upload-filename">{{ files && files.length ? files[0].name : '支持 jpg / png / gif / svg' }}</span>
+        </label>
+        <label class="field">
+            <span class="field-label">图片地址</span>
+            <input [(ngModel)]="url" type="text" placeholder="https://example.com/image.png">
+        </label>
+        <label class="field">
+            <span class="field-label">图片描述</span>
+            <input [(ngModel)]="desc" type="text" placeholder="可选的替代文本">
+        </label>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" (click)="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" *ngIf="url" (click)="confirm()">确认</button>
+            <button type="button" class="btn btn-primary" [disabled]="!files || files.length <= 0" (click)="uploadFile()">上传</button>
+        </div>
+    </div>
+    <div class="modal-body" *ngIf="optType === 'online'">
+        <label class="field">
+            <span class="field-label">图片地址</span>
+            <input [(ngModel)]="url" type="text" placeholder="https://example.com/image.png">
+        </label>
+        <label class="field">
+            <span class="field-label">图片描述</span>
+            <input [(ngModel)]="desc" type="text" placeholder="可选的替代文本">
+        </label>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" (click)="cancel()">取消</button>
+            <button type="button" class="btn btn-primary" *ngIf="url" (click)="confirm()">确认</button>
+        </div>
+    </div>
+</div>

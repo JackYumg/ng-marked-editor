@@ -1,0 +1,38 @@
+// 预览区全部主题入口，支持运行时切换
+// 只使用单一主题时，可直接引入对应的 xxx.less（会自动带上 core.less）
+@import './core.less';
+@import './default.less';
+@import './dark.less';
+
+// GitHub 家族
+@import './github-dark-dimmed.less';
+@import './github-high-contrast.less';
+@import './github-light-high-contrast.less';
+
+// 编辑器家族
+@import './vscode-dark.less';
+@import './vscode-light.less';
+@import './one-dark.less';
+@import './one-light.less';
+@import './dracula.less';
+@import './nord.less';
+@import './solarized-dark.less';
+@import './solarized-light.less';
+@import './gruvbox.less';
+@import './tokyo-night.less';
+@import './monokai.less';
+@import './catppuccin-mocha.less';
+@import './catppuccin-latte.less';
+
+// 文档产品风
+@import './gitlab.less';
+@import './notion.less';
+@import './gitbook.less';
+@import './material.less';
+
+// 极简 / 印刷风
+@import './plain.less';
+@import './paper.less';
+
+// 兼容旧版 .themeMixin() 调用：样式已由上方 @import 输出
+.themeMixin() {}

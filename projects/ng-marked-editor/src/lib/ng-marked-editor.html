@@ -1,0 +1,20 @@
+<div class="md-editor" [ngClass]="theme" [class.readonly]="readonly" [class.fangda]="editorState.zoom" #ngMarkedEditorTpl>
+    <lib-tool-bar class="md-editor-tool-bar" [stateInstance]="editorStateManageInstance" [hasHistory]="hasHistory"
+        [theme]="theme" [readonly]="readonly" (clickEvent)="toolbarClick($event)"></lib-tool-bar>
+    <div class="md-editor-container">
+        <textarea class="md-editor-textarea" rows="16" #textareaTpl [disabled]="disabled" [readOnly]="readonly" [ngModel]="value"
+            (ngModelChange)="onTextChange($event)"></textarea>
+        <ng-container>
+            <div class="md-editor-divider" [class.hidden]="!editorState.preview || editorState.code"></div>
+            <lib-ng-marked-preview class="md-editor-preview" [theme]="theme" [scrollH]="scrollH" [context]="value"
+                [class.hidden]="!editorState.preview || editorState.code" (scrollEvent)="scrollEvent($event)"
+                (valueChange)="previewValueChange($event)"></lib-ng-marked-preview>
+        </ng-container>
+        <ng-container>
+            <div class="md-editor-divider" [class.hidden]="!editorState.code"></div>
+            <p class="md-editor-code" [class.hidden]="!editorState.code">
+                {{domText}}
+            </p>
+        </ng-container>
+    </div>
+</div>

@@ -1,0 +1,204 @@
+@import '../../styles/modal/tokens.less';
+
+.modal-scrollbar() {
+    scrollbar-width: thin;
+    scrollbar-color: var(--mo-border) transparent;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: var(--mo-border);
+        border-radius: 4px;
+    }
+}
+
+:host {
+    display: block;
+}
+
+.modal-container {
+    .modal-light-tokens();
+    .modal-form-base();
+
+    &.dark {
+        .modal-dark-tokens();
+    }
+}
+
+.formula-body {
+    gap: 12px;
+}
+
+.formula-layout {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    min-height: 360px;
+}
+
+.symbol-panel {
+    flex: 0 0 264px;
+    width: 264px;
+    max-height: 460px;
+    padding-right: 8px;
+    overflow-y: auto;
+    border-right: 1px solid var(--mo-border);
+    .modal-scrollbar();
+}
+
+.symbol-group {
+    &+& {
+        margin-top: 14px;
+    }
+}
+
+.symbol-group-title {
+    margin-bottom: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--mo-muted);
+}
+
+.symbol-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.symbol-btn {
+    min-width: 34px;
+    height: 30px;
+    padding: 0 8px;
+    font-size: 13px;
+    line-height: 1;
+    color: var(--mo-text);
+    background: var(--mo-bg);
+    border: 1px solid var(--mo-border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color .15s, border-color .15s, color .15s;
+
+    &:hover {
+        color: var(--mo-primary);
+        background: var(--mo-hover);
+        border-color: var(--mo-primary);
+    }
+
+    &:active {
+        transform: translateY(1px);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px var(--mo-focus-ring);
+    }
+}
+
+.formula-editor-col {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+}
+
+.latex-input {
+    width: 100%;
+    min-height: 150px;
+    padding: 10px 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--mo-text);
+    background: var(--mo-bg);
+    border: 1px solid var(--mo-border);
+    border-radius: 6px;
+    outline: none;
+    resize: vertical;
+    transition: border-color .15s, box-shadow .15s;
+    .modal-scrollbar();
+
+    &::placeholder {
+        color: var(--mo-muted);
+    }
+
+    &:focus {
+        border-color: var(--mo-primary);
+        box-shadow: 0 0 0 3px var(--mo-focus-ring);
+    }
+}
+
+.formula-preview {
+    flex: 1 1 auto;
+    min-height: 140px;
+    max-height: 280px;
+    padding: 12px 16px;
+    overflow: auto;
+    color: var(--md-text, var(--mo-text));
+    background: var(--md-bg, var(--mo-surface));
+    border: 1px solid var(--md-border, var(--mo-border));
+    border-radius: 8px;
+    .modal-scrollbar();
+
+    .formula-preview-body {
+        display: flex;
+        justify-content: center;
+        min-width: 0;
+    }
+
+    .katex-display {
+        margin: 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+}
+
+.formula-preview-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100px;
+    font-size: 13px;
+    color: var(--md-text-muted, var(--mo-muted));
+}
+
+.formula-error {
+    padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: #d1242f;
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(209, 36, 47, .06);
+    border-radius: 6px;
+
+    .dark & {
+        color: #ff7b72;
+        background: rgba(255, 123, 114, .08);
+    }
+}
+
+@media (max-width: 720px) {
+    .formula-layout {
+        flex-direction: column;
+        min-height: 0;
+    }
+
+    .symbol-panel {
+        flex: 0 0 auto;
+        width: 100%;
+        max-height: 200px;
+        padding: 0 0 10px;
+        border-right: 0;
+        border-bottom: 1px solid var(--mo-border);
+    }
+}

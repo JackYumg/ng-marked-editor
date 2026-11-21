@@ -1,0 +1,39 @@
+<div class="modal-container" [class.dark]="isDark" [class.default]="!isDark" [ngStyle]="defaultStyle">
+    <div class="modal-header">
+        <h3 class="modal-title">公式编辑器</h3>
+        <button type="button" class="modal-close" aria-label="关闭" title="关闭" (click)="cancel()">×</button>
+    </div>
+    <div class="modal-body formula-body">
+        <div class="formula-layout">
+            <div class="symbol-panel">
+                <div class="symbol-group" *ngFor="let group of groups">
+                    <div class="symbol-group-title">{{ group.name }}</div>
+                    <div class="symbol-grid">
+                        <button type="button" class="symbol-btn" *ngFor="let symbol of group.symbols"
+                            [title]="symbol.title || symbol.latex" (click)="insertSymbol(symbol)">{{ symbol.label }}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="formula-editor-col">
+                <label class="field">
+                    <span class="field-label">LaTeX</span>
+                    <textarea #latexInput class="latex-input" [(ngModel)]="latex" (input)="onLatexInput()" rows="8"
+                        spellcheck="false" placeholder="输入 LaTeX，例如 \frac{a}{b}；可从左侧符号面板点击插入"></textarea>
+                </label>
+                <div class="field">
+                    <span class="field-label">实时预览</span>
+                    <div class="formula-preview ng-editor-md-workspace-display" [ngClass]="theme">
+                        <div class="formula-error" *ngIf="previewError">{{ previewError }}</div>
+                        <div class="formula-preview-body" *ngIf="!previewError && latex.trim()" [innerHTML]="previewHtml"></div>
+                        <div class="formula-preview-empty" *ngIf="!previewError && !latex.trim()">输入 LaTeX 后在此处实时预览</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn" (click)="cancel()">取消</button>
+            <button type="button" class="btn" [disabled]="!canInsert" (click)="insertFormula('inline-formula')">插入行内公式</button>
+            <button type="button" class="btn btn-primary" [disabled]="!canInsert" (click)="insertFormula('block-formula')">插入行间公式</button>
+        </div>
+    </div>
+</div>

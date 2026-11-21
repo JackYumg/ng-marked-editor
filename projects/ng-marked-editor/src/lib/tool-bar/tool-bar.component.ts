@@ -1,0 +1,259 @@
+import { CommonModule } from '@angular/common';
+import { Overlay, OverlayModule } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewContainerRef
+} from '@angular/core';
+import { fromEvent, Subscription } from 'rxjs';
+import { PlatformService } from '../core/platform.service';
+import { MdModalComponent } from '../md-modal/md-modal.component';
+import { EditorStateManageService } from '../services/editor-state-manage.service';
+import { NgMarkedEditorService } from '../services/ng-marked-editor.service';
+import { isDarkTheme, ThemeType } from '../types/editor';
+
+@Component({
+  selector: 'lib-tool-bar',
+  standalone: true,
+  imports: [CommonModule, OverlayModule],
+  templateUrl: './tool-bar.component.html',
+  styleUrls: ['./tool-bar.component.less'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    '[class.dark]': 'isDark',
+    '[class.default]': '!isDark'
+  }
+})
+export class ToolBarComponent implements OnInit, OnDestroy {
+  private readonly platform = inject(PlatformService);
+  private readonly cdk = inject(ChangeDetectorRef);
+  private readonly overlay = inject(Overlay);
+  readonly viewContainerRef = inject(ViewContainerRef);
+
+  @Output()
+  clickEvent: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input()
+  hasHistory = false; // 是否有上一步
+
+  @Input()
+  hasFurtrue = false; // 是否有下一步
+
+  @Input()
+  stateInstance?: EditorStateManageService;
+
+  @Input()
+  editorService?: NgMarkedEditorService;
+
+  @Input()
+  theme: ThemeType = 'default';
+
+  // 只读模式：仅禁用编辑类操作，预览 / 源码 / 全屏等查看类操作仍可用
+  @Input()
+  readonly = false;
+
+  // 未引入 iconfont 时，缺少的 symbol 用内置 SVG 兜底
+  missingIcons: Record<string, boolean> = {
+    'icon-liuchengtu': true,
+    'icon-gongshi': true
+  };
+
+  private iconTimer?: ReturnType<typeof setTimeout>;
+
+  get isDark(): boolean {
+    return isDarkTheme(this.theme);
+  }
+
+  baseGroup1 = [
+    { name: '#icon-bold', title: '加粗', type: 'insert' },
+    { name: '#icon-underline', title: '下划线', type: 'insert' },
+    { name: '#icon-italic', title: '斜体', type: 'insert' },
+    { name: '#icon-strike-through', title: '划去', type: 'insert', salis: 'through' },
+  ];
+
+  baseTitlt = { name: '#icon-title', show: false, type: 'insert', title: '标题' };
+
+  baseGroup2 = [
+    { name: '#icon-sub', title: '下标', type: 'insert' },
+    { name: '#icon-sup', type: 'insert', title: '上标' },
+    { name: '#icon-quote', type: 'insert', title: '引用' },
+    { name: '#icon-unordered-list', type: 'insert', title: '无序列表', salis: 'ulList' },
+    { name: '#icon-ordered-list', type: 'insert', title: '有序列表', salis: 'olList' },
+  ];
+
+  baseGroup3 = [
+    { name: '#icon-code-row', title: '行内代码', type: 'insert', salis: 'codeRow' },
+    { name: '#icon-code', title: '代码块', type: 'insert' },
+    { name: '#icon-link', title: '链接', type: 'modal' },
+    { name: '#icon-image', title: '图片', type: 'modal' },
+    { name: '#icon-table', title: '表格', type: 'insert' },
+  ];
+
+  moreFunction = [
+    { name: '#icon-liuchengtu', title: '流程图', show: false, type: 'insert' },
+    { name: '#icon-gongshi', show: false, title: '公式', type: 'insert' }
+  ];
+
+  optGroup = [
+    { name: '#icon-revoke', title: '撤销', disabledIcon: '#icon-invock-disable', disabled: false, type: 'history' },
+    { name: '#icon-next', title: '回滚', disabled: false, disabledIcon: '#icon-next-disable', type: 'history' },
+    { name: '#icon-baocun', title: '保存', disabled: false },
+  ];
+
+  rightGroup = [
+    { name: '#icon-prettier', type: 'editor-transform', title: '格式化' },
+    { name: '#icon-fangda', bakName: '#icon-suoxiao', type: 'editor-state',title: '全屏'},
+    { name: '#icon-fullScreen', bakName: '#icon-fullScreen-exit', type: 'editor-opt',title: '退出全屏' },
+    { name: '#icon-preview', bakName: '#icon-eye-close', type: 'editor-state',title: '预览' },
+    { name: '#icon-coding', type: 'editor-state', title: '查看源代码', bakTitle: '预览效果' },
+    { name: '#icon-github', title: '源码地址' },
+  ];
+
+  titleOpen = false;
+  clickWindowEvent?: Subscription;
+  globalEvent?: Subscription;
+  resizeEvent?: Subscription;
+  private toolEventSub?: Subscription;
+
+  ngOnInit(): void {
+    // SSR 环境没有 window，跳过全局事件绑定与状态初始化
+    if (this.platform.isBrowser) {
+      this.clickWindowEvent = fromEvent<MouseEvent>(window, 'click').subscribe(($event) => {
+        if (($event.target as any)?.name !== 'tool') {
+          this.baseTitlt.show = false;
+          this.moreFunction[0].show = false;
+          this.moreFunction[1].show = false;
+          this.cdk.markForCheck();
+        }
+      });
+
+      this.globalEvent = fromEvent<KeyboardEvent>(window, 'keyup').subscribe((e) => {
+        if (String.prototype.toLowerCase.call(e.code) === 'f11') {
+          e.preventDefault();
+          this.itemClick(this.rightGroup[2]);
+        }
+      });
+    }
+
+    this.initInvockOrNextState();
+    this.detectMissingIcons();
+    this.toolEventSub = this.stateInstance?.toolEvent.subscribe(() => {
+      this.initInvockOrNextState();
+    });
+  }
+
+  // 每个图标被点击时
+  itemClick(i: any, event?: Event, e?: any): void {
+    event?.stopPropagation();
+    if (this.readonly && this.isEditAction(i)) {
+      return;
+    }
+    const name = i.name.split(/^#[\w]+\-/)[1];
+    if (i.bakName) {
+      const temp = i.name;
+      i.name = i.bakName;
+      i.bakName = temp;
+    }
+    if (name === 'title' || name === 'liuchengtu' || name === 'gongshi') {
+      [this.baseTitlt, ...this.moreFunction].forEach((item) => {
+        if (item.name === i.name) {
+          item.show = true;
+        } else {
+          item.show = false;
+        }
+      });
+      if (e) {
+        this.clickEvent.emit({ item: i, name, value: e });
+      }
+      // 可视化编辑会打开弹窗，立即收起下拉
+      if (e === 'visual') {
+        this.baseTitlt.show = false;
+        this.moreFunction[0].show = false;
+        this.moreFunction[1].show = false;
+      }
+    } else if (name === 'github') {
+      this.platform.window?.open('https://github.com/JackYumg/ng-plugins/tree/main/projects/ng-marked-editor', '__target');
+    } else {
+      this.clickEvent.emit({ item: i, name });
+    }
+    this.cdk.markForCheck();
+  }
+
+  // 创建弹框
+  createModal(): void {
+    if (!this.platform.isBrowser) {
+      return;
+    }
+    const ref = this.overlay.create({
+      hasBackdrop: true,
+      scrollStrategy: this.overlay.scrollStrategies.block(),
+      positionStrategy: this.overlay.position().global(),
+      disposeOnNavigation: true
+    });
+    const modal = new ComponentPortal(MdModalComponent);
+    ref.attach(modal);
+  }
+
+  // 判断按钮是否属于编辑类操作（只读模式下禁用）
+  private isEditAction(item: any): boolean {
+    const type = item?.type;
+    return type === 'insert' || type === 'modal' || type === 'editor-transform' || type === 'history';
+  }
+
+  // 检测 iconfont symbol 是否已加载，缺失时模板使用内置 SVG
+  private detectMissingIcons(): void {
+    if (!this.platform.isBrowser) {
+      return;
+    }
+    const check = (): void => {
+      const doc = this.platform.window?.document;
+      if (!doc) {
+        return;
+      }
+      let changed = false;
+      for (const id of Object.keys(this.missingIcons)) {
+        const symbol = doc.getElementById(id);
+        const missing = !symbol;
+        // iconfont 的 symbol 内置了固定 fill（#2c2c2c），暗色主题下几乎不可见，移除后跟随 CSS 的 fill
+        symbol?.querySelectorAll('[fill]').forEach((node) => node.removeAttribute('fill'));
+        if (this.missingIcons[id] !== missing) {
+          this.missingIcons[id] = missing;
+          changed = true;
+        }
+      }
+      if (changed) {
+        this.cdk.markForCheck();
+      }
+    };
+    check();
+    // iconfont 脚本可能晚于组件初始化注入
+    this.iconTimer = setTimeout(check, 1200);
+  }
+
+  // 初始化时获取操作按钮状态
+  initInvockOrNextState(): void {
+    const hasPre = this.stateInstance?.hasPre();
+    const hasNext = this.stateInstance?.hasNext();
+    this.optGroup[0].disabled = !hasPre;
+    this.optGroup[1].disabled = !hasNext;
+    this.cdk.markForCheck();
+  }
+
+  ngOnDestroy(): void {
+    this.clickWindowEvent?.unsubscribe();
+    this.globalEvent?.unsubscribe();
+    this.resizeEvent?.unsubscribe();
+    this.toolEventSub?.unsubscribe();
+    if (this.iconTimer) {
+      clearTimeout(this.iconTimer);
+    }
+  }
+}

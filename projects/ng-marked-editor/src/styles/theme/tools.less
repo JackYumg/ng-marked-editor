@@ -1,0 +1,72 @@
+@import './core.less';
+
+// 主题工具：统一生成 --md-* 变量与 highlight.js 配色
+// 调用方式（分号分隔，避免 rgba 逗号冲突）：
+// .md-theme(dark; @text; @muted; @bg; @border; @surface; @inline; @link; @quote; @stripe; @code-btn);
+// .md-hljs(@comment; @keyword; @string; @number; @title; @variable; @builtin);
+.md-theme(@scheme; @text; @muted; @bg; @border; @surface; @inline; @link; @quote; @stripe; @code-btn) {
+    color-scheme: @scheme;
+
+    --md-text: @text;
+    --md-text-muted: @muted;
+    --md-bg: @bg;
+    --md-border: @border;
+    --md-surface: @surface;
+    --md-inline-code-bg: @inline;
+    --md-link: @link;
+    --md-quote-border: @quote;
+    --md-table-stripe: @stripe;
+    --md-code-btn-bg: @code-btn;
+}
+
+.md-hljs(@comment; @keyword; @string; @number; @title; @variable; @builtin) {
+    .hljs-comment,
+    .hljs-quote {
+        color: @comment;
+    }
+
+    .hljs-keyword,
+    .hljs-selector-tag,
+    .hljs-type {
+        color: @keyword;
+    }
+
+    .hljs-string,
+    .hljs-attr,
+    .hljs-template-tag,
+    .hljs-template-variable {
+        color: @string;
+    }
+
+    .hljs-number,
+    .hljs-literal,
+    .hljs-symbol,
+    .hljs-bullet {
+        color: @number;
+    }
+
+    .hljs-title,
+    .hljs-title.function_,
+    .hljs-section {
+        color: @title;
+    }
+
+    .hljs-variable,
+    .hljs-params,
+    .hljs-attribute {
+        color: @variable;
+    }
+
+    .hljs-built_in,
+    .hljs-meta {
+        color: @builtin;
+    }
+
+    .hljs-emphasis {
+        font-style: italic;
+    }
+
+    .hljs-strong {
+        font-weight: 600;
+    }
+}
