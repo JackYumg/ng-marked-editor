@@ -57,8 +57,8 @@
         </aside>
 
         <section class="demo-editor">
-            <lib-ng-marked-editor [(ngModel)]="markdown" [theme]="theme" [readonly]="readonly" [option]="option"
-                [fileUploadChange]="fileUploadChange" (saveChange)="onSave($event)"></lib-ng-marked-editor>
+            <ng-marked-editor [(ngModel)]="markdown" [theme]="theme" [readonly]="readonly" [option]="option"
+                [fileUploadChange]="fileUploadChange" (saveChange)="onSave($event)"></ng-marked-editor>
         </section>
     </main>
 </div>

@@ -31,12 +31,12 @@ import { NgMarkedEditorComponent, NgMarkedEditorOption } from 'ng-marked-editor'
   selector: 'app-root',
   imports: [FormsModule, NgMarkedEditorComponent],
   template: `
-    <lib-ng-marked-editor
+    <ng-marked-editor
       [(ngModel)]="markdown"
       [theme]="'default'"
       [option]="option"
       (saveChange)="onSave($event)">
-    </lib-ng-marked-editor>
+    </ng-marked-editor>
   `
 })
 export class AppComponent {
@@ -90,9 +90,9 @@ interface NgMarkedEditorOption {
 组件实现了 `ControlValueAccessor`，支持：
 
 ```html
-<lib-ng-marked-editor [(ngModel)]="markdown"></lib-ng-marked-editor>
+<ng-marked-editor [(ngModel)]="markdown"></ng-marked-editor>
 
-<lib-ng-marked-editor [formControl]="control"></lib-ng-marked-editor>
+<ng-marked-editor [formControl]="control"></ng-marked-editor>
 ```
 
 ## 工具项

@@ -33,7 +33,7 @@ import { EditorShortcutAction, isDarkTheme, MdSelection, NgMarkedEditorOption, T
 import { TextareaSelectionService } from './utils/textarea-selection.service';
 
 @Component({
-  selector: 'lib-ng-marked-editor',
+  selector: 'ng-marked-editor',
   standalone: true,
   imports: [CommonModule, FormsModule, ToolBarComponent, NgMarkedPreviewComponent],
   templateUrl: './ng-marked-editor.html',

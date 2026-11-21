@@ -68,7 +68,7 @@ import { NgMarkedEditorComponent } from 'ng-marked-editor';
 @Component({
   selector: 'app-root',
   imports: [NgMarkedEditorComponent],
-  template: \`<lib-ng-marked-editor [(ngModel)]="markdown"></lib-ng-marked-editor>\`
+  template: \`<ng-marked-editor [(ngModel)]="markdown"></ng-marked-editor>\`
 })
 export class App {
   markdown = '# Hello';
