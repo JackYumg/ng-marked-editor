@@ -1,6 +1,6 @@
 {
   "name": "ng-marked-editor",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "Angular standalone Markdown 编辑器组件库，支持实时预览、代码高亮、KaTeX 公式、Mermaid 图表与 SSR。",
   "keywords": [
     "angular",
