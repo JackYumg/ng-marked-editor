@@ -44,8 +44,6 @@ __screenshots__/
 Thumbs.db
 .tmp-shots/
 .trae/
-pnpm-lock.yaml
-pnpm-workspace.yaml
 .vscode/extensions.json
 .vscode/launch.json
 .vscode/tasks.json
